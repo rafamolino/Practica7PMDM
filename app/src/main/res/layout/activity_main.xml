@@ -26,8 +26,8 @@
 
     <ListView
         android:id="@+id/card_listView"
-        android:layout_width="389dp"
-        android:layout_height="576dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="55dp"
         android:divider="@null"

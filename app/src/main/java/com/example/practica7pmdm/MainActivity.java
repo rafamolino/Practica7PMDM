@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         imgMapa = findViewById(R.id.imgMapa);
 
 
-        final String[] categoriaLugar = {"Restaurantes" , "Cines", "Tiendas" , "Parques", "PUBS"};
+        final String[] categoriaLugar = {getResources().getString(R.string.todos) , getResources().getString(R.string.restaurantes), getResources().getString(R.string.cines) , getResources().getString(R.string.tiendas), getResources().getString(R.string.parques), getResources().getString(R.string.pubs)};
         ArrayAdapter adaptadorCategoriaLugar = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, categoriaLugar);
 
         final Spinner OpcionesEC = findViewById(R.id.categorias);

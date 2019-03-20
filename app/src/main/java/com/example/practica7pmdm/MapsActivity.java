@@ -1,18 +1,28 @@
 package com.example.practica7pmdm;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-
+import com.example.practica7pmdm.Logic.LogicSitio;
+import com.example.practica7pmdm.Model.Sitio;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.List;
+
+import static com.example.practica7pmdm.App.sitio3;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
+    LatLng nuevaPosicion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,22 +35,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mostrarTodos();
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(5), 2000, null);
+        mMap.setOnMarkerClickListener(this);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (marker.equals(marker))
+        {
+
+            String cadena = marker.getSnippet();
+            String cadena1[] = cadena.split(",");
+            String latitud  = cadena1[0];
+            String longitud = cadena1 [1];
+            Sitio p = LogicSitio.listaSitios4(this, latitud, longitud);
+            App.sitioActivo=p;
+
+            Intent intent=new Intent(this,Informacion.class);
+            startActivity(intent);
+
+
+        }
+
+        return false;
+    }
+    public void mostrarTodos() {
+        float colorIcono []={0f, 60f, 120f, 180f, 240f, 320f};
+
+        if(sitio3==0)
+        {
+            List<Sitio> lstSitio = LogicSitio.listaSitios(this);
+            for (Sitio p : lstSitio) {
+                nuevaPosicion = new LatLng(p.getLatitud(), p.getLongitud());
+                mMap.addMarker(new MarkerOptions().position(nuevaPosicion).snippet(p.getLatitud()+ ","+ p.getLongitud()).title(p.getNombre()).icon(BitmapDescriptorFactory.defaultMarker(colorIcono[p.getCategoria()])));
+            }
+        }
+        else
+        {
+            List<Sitio> lstLugar = LogicSitio.listaSitios3(this, App.sitio3);
+            for (Sitio p : lstLugar)
+            {
+                nuevaPosicion=new LatLng(p.getLatitud(),p.getLongitud());
+                mMap.addMarker(new MarkerOptions().position(nuevaPosicion).snippet(p.getLatitud()+ ","+ p.getLongitud()).title(p.getNombre()).icon(BitmapDescriptorFactory.defaultMarker(colorIcono[p.getCategoria()])));
+            }
+        }
     }
 }
